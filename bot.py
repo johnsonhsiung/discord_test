@@ -26,10 +26,22 @@ async def on_ready():
     print(f'Guild Members:\n - {members}')
 
 
-@bot.command(name='quack')
+@bot.command(name='quack', help='Responds with QUACK')
 async def quack(ctx):
     response = 'QUACK'
     await ctx.send(response)
+
+@bot.command(name='quack_rep', help='QUACK with repetitions')
+async def quack(ctx, reps: int):
+    response = 'QUACK'
+    await ctx.send(' '.join([response for _ in range(reps)])) 
+
+@bot.event
+async def on_member_join(member):
+    await member.create_dm()
+    await member.dm_channel.send(
+        f'Hi {member.name}, welcome to {member.guild.name}! Say "!quack" in Recruit\'s Pond to get some Quacks!'
+    )
 
 bot.run(TOKEN)
 
