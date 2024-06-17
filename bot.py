@@ -27,12 +27,13 @@ async def on_ready():
 
 
 @bot.command(name='quack', help='Responds with QUACK')
-async def quack(ctx):
+async def quack(ctx, reps: int=1):
     response = 'QUACK'
     await ctx.send(response)
 
 @bot.command(name='quack_rep', help='QUACK with repetitions')
-async def quack(ctx, reps: int):
+@commands.has_permissions(administrator=True)
+async def quack_rep(ctx, reps: int):
     response = 'QUACK'
     await ctx.send(' '.join([response for _ in range(reps)])) 
 
@@ -42,6 +43,11 @@ async def on_member_join(member):
     await member.dm_channel.send(
         f'Hi {member.name}, welcome to {member.guild.name}! Say "!quack" in Recruit\'s Pond to get some Quacks!'
     )
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.errors.CheckFailure):
+        await ctx.send('You do not have the correct role for this command.')
 
 bot.run(TOKEN)
 
